@@ -7,10 +7,30 @@ void init_grille_from_file (char * filename, grille* g){
 	
 	int i,j,n,l,c,vivantes=0;
 	
-	fscanf(pfile, "%d", & l);
+	fscanf(pfile, "		g->cellules=malloc(l*sizeof(int))
+", & l);
 	fscanf(pfile, "%d", & c);
 	
-	alloue_grille(l,c,g);
+	alloue_grille(l,c,g){
+		int **tab2D;
+		tab2D=(int **) malloc(l*sizeof(int*));
+		for(int i=0;i<l;i++){
+			tab2D[i]=(int *)malloc(c*sizeof(int));
+		}
+		for(int j=0;j<l;j++){
+			for (int k=0;k<c;k++){
+				tab2D[j][k]=0:
+			}
+		}
+		g->cellules=tab2D;
+	}
+	libere_grille(g){
+		for(int i=0;i<g->nbc;i++){
+			free(g->cellules[i]);	
+		}
+		free(g->cellules);
+
+	}
 	
 	fscanf(pfile, "%d", & vivantes);
 	for (n=0; n< vivantes; ++n){
