@@ -6,8 +6,8 @@ grille.o: grille.c grille.h
 	gcc -g -Wall -c grille.c
 jeu.o:	jeu.c jeu.h grille.h
 	gcc -g -Wall -c  jeu.c
-io.o:	io.h grille.h jeu.h
-	gcc -g -Wall -c jeu.c
+io.o:	io.h 
+	gcc -g -Wall -c io.c
 clean:
 	rm -f *.o main
 dist:
