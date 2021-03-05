@@ -14,7 +14,7 @@ io.o:	io.h grille.h jeu.h
 	gcc -g -Wall -c io.c
 
 clean:
-	rm * .o
+	rm *.o main
 
 dist:
 	tar -zcvf projet.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h Makefile

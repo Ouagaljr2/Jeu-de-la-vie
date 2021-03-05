@@ -48,6 +48,7 @@ void debut_jeu(grille *g, grille *gc){
 				char * nomDeFichier;
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
+				break;
 			}
 			default : 
 			{ // touche non traitée

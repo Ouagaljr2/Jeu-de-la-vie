@@ -10,6 +10,7 @@ void alloue_grille(int l,int c, grille*g){
 			tab2D[j][k]=0;
 		}
 	}
+	g->cellules=tab2D;
 }
 void libere_grille(grille*g){
 	for(int i=0;i<g->nbc;i++){
