@@ -43,6 +43,12 @@ void debut_jeu(grille *g, grille *gc){
 				affiche_grille(*g);
 				break;
 			}
+			case 'n':
+			{	
+				char * nomDeFichier;
+				scanf("%s",nomDeFichier);
+				init_grille_from_file(nomDeFichier,g);
+			}
 			default : 
 			{ // touche non traitée
 				printf("\n\e[1A");
