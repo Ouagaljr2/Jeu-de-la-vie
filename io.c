@@ -45,7 +45,8 @@ void debut_jeu(grille *g, grille *gc){
 			}
 			case 'n':
 			{	
-				char * nomDeFichier;
+				char nomDeFichier[100];
+				printf("Entrer le chemain de la grille");
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
 				break;
