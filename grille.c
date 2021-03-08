@@ -1,16 +1,16 @@
 #include "grille.h"
 void alloue_grille(int l,int c, grille*g){
-	int **tab2D;
-	tab2D=(int**)malloc(l*sizeof(int*));
+	g->nbc=c;
+	g->nbl=l;
+	g->cellules=(int**)malloc(l*sizeof(int*));
 	for(int i=0;i<l;i++){
-		tab2D[i]=(int *)malloc(c*sizeof(int));
+		g->cellules[i]=(int *)malloc(c*sizeof(int));
 	}
 	for(int j=0;j<l;j++){
 		for(int k=0;k<c;k++){
-			tab2D[j][k]=0;
+			g->cellules[j][k]=0;
 		}
 	}
-	g->cellules=tab2D;
 }
 void libere_grille(grille*g){
 	for(int i=0;i<g->nbc;i++){
