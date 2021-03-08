@@ -48,7 +48,6 @@ void debut_jeu(grille *g, grille *gc){
 				char nomDeFichier[100];
 				printf("Entrer le chemain de la grille \n");
 				scanf("%s",nomDeFichier);
-				alloue_grille(g->nbl,g->nbc,g);
 				init_grille_from_file(nomDeFichier,g);
 				affiche_grille(*g);
 
