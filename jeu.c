@@ -1,5 +1,11 @@
 #include "jeu.h"
-
+/** 
+ * \fn compte_voisins_vivants(int i,int j, grille g);
+ * \param i indice de ligne d'une cellule
+ * \param j indice de colonne d'une cellule
+ * \param g une grille 
+ * \return  retourne de le nombre de voisins vivant d'une cellule[i][j]
+ */
 int compte_voisins_vivants (int i, int j, grille g){
 	int v = 0, l=g.nbl, c = g.nbc;
 	v+= est_vivante(modulo(i-1,l),modulo(j-1,c),g);
@@ -14,6 +20,12 @@ int compte_voisins_vivants (int i, int j, grille g){
 	return v; 
 }
 
+/** 
+ * \fn evolue(grille *g, grille* gc);
+ * \param g une grille
+ * \param gc une grille
+ * \return  retourne rien mais test l'evolution de g et la copie dans gc au fure et a mesure
+ */
 void evolue (grille *g, grille *gc){
 	copie_grille (*g,*gc); // copie temporaire de la grille
 	int i,j,l=g->nbl, c = g->nbc,v;
