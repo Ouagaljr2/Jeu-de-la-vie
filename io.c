@@ -69,8 +69,7 @@ void debut_jeu(grille *g, grille *gc){
 				printf("Entrer le chemain de la grille \n");
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
-				affiche_grille(*g);
-
+				alloue_grille(g->nbl,g->nbc,gc);
 				break;
 			}
 			default : 

@@ -24,7 +24,7 @@ void alloue_grille(int l,int c, grille*g){
  * \param g une grille 
  * \return retourne rien mais desalloue l'espace reserver par la fonction alloue_grille
  */
-void libere_grille(grille*g){
+void libere_grille(grille* g){
 	for(int i=0;i<g->nbc;i++){
 		free(g->cellules[i]);
 	}
