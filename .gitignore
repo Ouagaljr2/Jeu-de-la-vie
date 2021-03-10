@@ -1,3 +1,5 @@
 *.o
 *.txt
 main
+latex
+html
