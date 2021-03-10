@@ -6,31 +6,32 @@
  * \param g une grille 
  * \return  retourne rien mais alloue dynamique de l'espace pour des lignes et colones
  */
-void alloue_grille(int l,int c, grille*g){
+void alloue_grille(int l,int c, grille* g){
 	g->nbc=c;
 	g->nbl=l;
 	g->cellules=(int**)malloc(l*sizeof(int*));
 	for(int i=0;i<l;i++){
 		g->cellules[i]=(int *)malloc(c*sizeof(int));
 	}
-	for(int j=0;j<l;j++){
-		for(int k=0;k<c;k++){
-			g->cellules[j][k]=0;
+	for(int  i=0;i<l;i++){
+		for(int j=0;j<c;j++){
+			g->cellules[i][j]=0;
 		}
 	}
 }
+
+
 /** 
  * \fn liberer_grille(grille*g);
  * \param g une grille 
  * \return retourne rien mais desalloue l'espace reserver par la fonction alloue_grille
  */
-void libere_grille(grille* g){
-	for(int i=0;i<g->nbc;i++){
+void libere_grille(grille*g){
+	for(int i=0;i<g->nbl;i++){
 		free(g->cellules[i]);
 	}
-	free(g->cellules);
+	 free(g->cellules);
 }
-
 /** 
  * \fn inti_grille_from_file(int l,int c, grille*g);
  * \param filemane nom d'un fichier contenant des donnees d'une grille

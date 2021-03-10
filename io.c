@@ -72,6 +72,7 @@ void debut_jeu(grille *g, grille *gc){
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
 				alloue_grille(g->nbl,g->nbc,gc);
+				affiche_grille(*g);
 				break;
 			}
 			default : 
