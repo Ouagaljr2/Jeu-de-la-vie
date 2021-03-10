@@ -1,3 +1,8 @@
+/** 
+ * \file
+ * Fonctions pour les affichages
+ * \author Ouagal Mahamat
+ */
 #include "io.h"
 /** 
  * \fn affiche_trait(int c,);
@@ -28,9 +33,9 @@ void affiche_ligne (int c, int* ligne){
  * \param g une grille 
  * \return  retourne rien mais affiche une grille passée en paramettre
  */
-void affiche_grille (grille g){
+void affiche_grille (grille g,int tempsEvolution){
 	int i, l=g.nbl, c=g.nbc;
-	printf("\n");
+	printf("%d génération\n",tempsEvolution);
 	affiche_trait(c);
 	for (i=0; i<l; ++i) {
 		affiche_ligne(c, g.cellules[i]);
@@ -42,7 +47,7 @@ void affiche_grille (grille g){
 
 
 void efface_grille (grille g){
-	printf("\n\e[%dA",g.nbl*2 + 5); 
+	system("clear"); 
 }
 
 /** 
@@ -52,19 +57,20 @@ void efface_grille (grille g){
  * \return  retourne rien mais cree une grille g copie son evolution dans c et l'efface a chaque appuis sur "\n" 
  */
 void debut_jeu(grille *g, grille *gc){
+	int tempsEvolution=1;
 	char c = getchar(); 
 	while (c != 'q') // touche 'q' pour quitter
 	{ 
 		switch (c) {
 			case '\n' : 
 			{ // touche "entree" pour évoluer
-				evolue(g,gc);
+				evolue(g,gc,& tempsEvolution);
 				efface_grille(*g);
-				affiche_grille(*g);
+				affiche_grille(*g, tempsEvolution);
 				break;
 			}
 			case 'n':
-			{	
+			{	tempsEvolution=0;
 				libere_grille(g);
 				libere_grille(gc);
 				char nomDeFichier[100];
@@ -72,7 +78,7 @@ void debut_jeu(grille *g, grille *gc){
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
 				alloue_grille(g->nbl,g->nbc,gc);
-				affiche_grille(*g);
+				affiche_grille(*g,tempsEvolution);
 				break;
 			}
 			default : 

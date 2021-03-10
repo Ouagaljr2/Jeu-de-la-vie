@@ -17,5 +17,7 @@ clean:
 	rm  -f *.o main
 
 dist:
-	tar -zcvf projet.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h Makefile
-
+	tar -zcvf projet.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h makefile html
+docs:
+	doxygen -g
+	doxygen Doxyfile
