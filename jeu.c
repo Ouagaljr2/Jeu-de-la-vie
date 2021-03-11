@@ -21,22 +21,14 @@ int compte_voisins_vivants (int i, int j, grille g){
 }
 int compte_voisins_vivants_non_cyclique(int i,int j, grille g){
 	int v = 0, l=g.nbl, c = g.nbc;
-	v+= if (i-1 >=0 && j->=0) return est_vivante(i-1,j-1,g);
-	else return 0;
-	v+= if (i-1 >=0) return est_vivante(i-1,j,g);
-	else return 0;
-	v+=if(i-1 >=0 && j+1 <c) return est_vivante(i-1,j+1,g);
-	else return 0;
-	v+=if(j-1 >=0) return est_vivante(i,j-1,g);
-	else return 0;
-	v+= if(j+1 <c ) return est_vivante(i,j+1,g);
-	else return 0;
-	v+=if(i+1 <l && j-1 >=0)return  est_vivante(i+1,j-1,g);
-	else return 0;
-	v+=if(i+1 < l) return est_vivante(i+1,j,g);
-	else return 0;
-	v+= if(i+1 < l && j+1 < c) return est_vivante(i+1,j+1,g);
-	else return 0;
+	v+=(i-1 >=0 && j-1 >=0) ? est_vivante(i-1,j-1,g) : 0;
+	v+=(i-1 >=0) ? est_vivante(i-1,j,g) : 0;
+	v+=(i-1 >=0 && j+1 <c) ? est_vivante(i-1,j+1,g) : 0;
+	v+=(j-1 >=0) ? est_vivante(i,j-1,g) : 0;
+	v+=(j+1 <c ) ? est_vivante(i,j+1,g) : 0;
+	v+=(i+1 <l && j-1 >=0) ? est_vivante(i+1,j-1,g) : 0;
+	v+=(i+1 < l) ? est_vivante(i+1,j,g) : 0;
+	v+=(i+1 < l && j+1 < c) ? est_vivante(i+1,j+1,g) : 0;
 	return v;
 
 }

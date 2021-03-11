@@ -12,7 +12,7 @@ int main (int argc, char ** argv) {
 	}
 
 	grille g, gc;
-	int tempsEvolutionDepart=1;
+	int tempsEvolutionDepart=0;
 	init_grille_from_file(argv[1],&g);
 	alloue_grille (g.nbl, g.nbc, &gc);
 	affiche_grille(g,tempsEvolutionDepart);

@@ -57,7 +57,7 @@ void efface_grille (grille g){
  * \return  retourne rien mais cree une grille g copie son evolution dans c et l'efface a chaque appuis sur "\n" 
  */
 void debut_jeu(grille *g, grille *gc){
-	int tempsEvolution=1;
+	int tempsEvolution=0;
 	char c = getchar(); 
 	while (c != 'q') // touche 'q' pour quitter
 	{ 
@@ -70,7 +70,7 @@ void debut_jeu(grille *g, grille *gc){
 				break;
 			}
 			case 'n':
-			{	tempsEvolution=0;
+			{
 				libere_grille(g);
 				libere_grille(gc);
 				char nomDeFichier[100];
