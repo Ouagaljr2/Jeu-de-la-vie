@@ -39,7 +39,7 @@ int compte_voisins_vivants_non_cyclique(int i,int j, grille g){
  * \param gc une grille
  * \return  retourne rien mais test l'evolution de g et la copie dans gc au fure et a mesure
  */
-void evolue (grille *g, grille *gc,int * tempsEvolution){
+void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vivants)(int,int, grille)){
 	(* tempsEvolution)++;
 	copie_grille (*g,*gc); // copie temporaire de la grille
 	int i,j,l=g->nbl, c = g->nbc,v;

@@ -33,9 +33,10 @@ void affiche_ligne (int c, int* ligne){
  * \param g une grille 
  * \return  retourne rien mais affiche une grille passée en paramettre
  */
-void affiche_grille (grille g,int tempsEvolution){
+void affiche_grille (grille g,int tempsEvolution,int mode){
 	int i, l=g.nbl, c=g.nbc;
-	printf("%d génération\n",tempsEvolution);
+	if(mode==1 )printf("%d génération le mode d'evolution est: %s\n",tempsEvolution,"Cyclique");
+	else printf("%d génération le mode d'evolution est: %s\n",tempsEvolution,"non-Cyclique");
 	affiche_trait(c);
 	for (i=0; i<l; ++i) {
 		affiche_ligne(c, g.cellules[i]);
@@ -58,19 +59,21 @@ void efface_grille (grille g){
  */
 void debut_jeu(grille *g, grille *gc){
 	int tempsEvolution=0;
+	int modeCompteVoisinsCycle=1; // 1 equivaut a true pour dire le comptage est cyclique
+	int (*compte_voisins_vivants)(int,int ,grille)=compte_voisins_vivants_non_cyclique;
 	char c = getchar(); 
 	while (c != 'q') // touche 'q' pour quitter
 	{ 
 		switch (c) {
 			case '\n' : 
 			{ // touche "entree" pour évoluer
-				evolue(g,gc,& tempsEvolution);
+				evolue(g,gc,& tempsEvolution,compte_voisins_vivants);
 				efface_grille(*g);
-				affiche_grille(*g, tempsEvolution);
+				affiche_grille(*g, tempsEvolution,modeCompteVoisinsCycle);
 				break;
 			}
 			case 'n':
-			{
+			{	tempsEvolution=0;
 				libere_grille(g);
 				libere_grille(gc);
 				char nomDeFichier[100];
@@ -78,7 +81,20 @@ void debut_jeu(grille *g, grille *gc){
 				scanf("%s",nomDeFichier);
 				init_grille_from_file(nomDeFichier,g);
 				alloue_grille(g->nbl,g->nbc,gc);
-				affiche_grille(*g,tempsEvolution);
+				affiche_grille(*g,tempsEvolution,modeCompteVoisinsCycle);
+				break;
+			}
+			case 'c':
+			{
+				if (modeCompteVoisinsCycle){
+					modeCompteVoisinsCycle=0;
+					compte_voisins_vivants=&(compte_voisins_vivants_non_cyclique);
+				}
+				else{
+					modeCompteVoisinsCycle=1;
+					compte_voisins_vivants=&(compte_voisins_vivants_non_cyclique);
+				}
+				
 				break;
 			}
 			default : 

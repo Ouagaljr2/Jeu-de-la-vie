@@ -12,10 +12,10 @@ static inline int modulo(int i, int m) {return (i+m)%m;}
 int compte_voisins_vivants (int i, int j, grille g);
 
 // compte le nombre de voisins vivants de la cellule (i,j)
-// les bords sont on-cycliques.
+// les bords sont non-cycliques.
 int compte_voisins_vivants_non_cyclique(int i,int j, grille g);
 
 // fait évoluer la grille g d'un pas de temps
-void evolue (grille *g, grille *gc,int * tempsEvolution);
+void evolue (grille *g, grille *gc,int * tempsEvolution,int (*compte_voisins_vivants)(int,int, grille));
 
 #endif
