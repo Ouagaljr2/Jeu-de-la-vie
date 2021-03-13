@@ -17,7 +17,7 @@ clean:
 	rm  -f *.o main
 
 dist:
-	tar -zcvf projet.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h makefile html
+	tar -zcvf MahamatOuagal-GoL-v1.0.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h makefile Doxyfile
 docs:
 	doxygen -g
 	doxygen Doxyfile

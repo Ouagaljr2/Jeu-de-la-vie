@@ -1,11 +1,10 @@
-#include "grille.h"
-/** 
- * \fn alloue_grille(int l,int c, grille*g);
- * \param l nombre de ligne d'une grille
- * \param c nommbre de colonnes d'une grille
- * \param g une grille 
- * \return  retourne rien mais alloue dynamique de l'espace pour des lignes et colones
+/**
+ * \file grilles.c
+ * \brief Tous les opperations sur une grille allouer initialiser liberer copier
+ * \author Mahamat Ouagal
  */
+#include "grille.h"
+
 void alloue_grille(int l,int c, grille* g){
 	g->nbc=c;
 	g->nbl=l;
@@ -20,24 +19,13 @@ void alloue_grille(int l,int c, grille* g){
 	}
 }
 
-
-/** 
- * \fn liberer_grille(grille*g);
- * \param g une grille 
- * \return retourne rien mais desalloue l'espace reserver par la fonction alloue_grille
- */
 void libere_grille(grille*g){
 	for(int i=0;i<g->nbl;i++){
 		free(g->cellules[i]);
 	}
 	 free(g->cellules);
 }
-/** 
- * \fn inti_grille_from_file(int l,int c, grille*g);
- * \param filemane nom d'un fichier contenant des donnees d'une grille
- * \param g une grille 
- * \return  rien alloue et initialise une grille avec les donnees de filename
- */
+
 void init_grille_from_file (char * filename, grille* g){
 	FILE * pfile = NULL;
 	pfile = fopen(filename, "r");
@@ -60,13 +48,6 @@ void init_grille_from_file (char * filename, grille* g){
 	fclose (pfile);
 	return;
 }
-
-/** 
- * \fn copie_grille(int l,int c, grille*g);
- * \param gs une grille
- * \param gd une grille 
- * \return  retourne rien effectue une copie de la grille gs dans gd
- */
 
 void copie_grille (grille gs, grille gd){
 	int i, j;

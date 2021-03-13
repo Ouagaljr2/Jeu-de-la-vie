@@ -1,11 +1,10 @@
-#include "jeu.h"
-/** 
- * \fn compte_voisins_vivants(int i,int j, grille g);
- * \param i indice de ligne d'une cellule
- * \param j indice de colonne d'une cellule
- * \param g une grille 
- * \return  retourne de le nombre de voisins vivant d'une cellule[i][j]
+/**
+ * \file jeu.c
+ * \brief Tout ce qui est evolution d'une grille et nombre de voisins d'une cellule
+ * \author Mahamat Ouagal
  */
+#include "jeu.h"
+
 int compte_voisins_vivants (int i, int j, grille g){
 	int v = 0, l=g.nbl, c = g.nbc;
 	v+= est_vivante(modulo(i-1,l),modulo(j-1,c),g);
@@ -33,13 +32,7 @@ int compte_voisins_vivants_non_cyclique(int i,int j, grille g){
 
 }
 
-/** 
- * \fn evolue(grille *g, grille* gc);
- * \param g une grille
- * \param gc une grille
- * \return  retourne rien mais test l'evolution de g et la copie dans gc au fure et a mesure
- */
-void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vivants)(int,int, grille)){
+void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vivants_mode)(int,int, grille),int vieillissement){
 	(* tempsEvolution)++;
 	copie_grille (*g,*gc); // copie temporaire de la grille
 	int i,j,l=g->nbl, c = g->nbc,v;
@@ -47,9 +40,14 @@ void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vi
 	{
 		for (j=0; j<c; ++j)
 		{
-			v = compte_voisins_vivants (i, j, *gc);
+			v = compte_voisins_vivants_mode (i, j, *gc);
 			if (est_vivante(i,j,*g)) 
 			{ // evolution d'une cellule vivante
+				if(vieillissement ){
+					if ( v!=2 && v!= 3 ) set_morte(i,j,*g);
+					else g->cellules[i][j]++;
+				}
+				
 				if ( v!=2 && v!= 3 ) set_morte(i,j,*g);
 			}
 			else 
