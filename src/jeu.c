@@ -40,6 +40,7 @@ void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vi
 	{
 		for (j=0; j<c; ++j)
 		{
+			if(g->cellules[i][j]!=-1){
 			v = compte_voisins_vivants_mode (i, j, *gc);
 			if (est_vivante(i,j,*g)) 
 			{ // evolution d'une cellule vivante
@@ -54,6 +55,7 @@ void evolue (grille *g, grille *gc,int * tempsEvolution, int (*compte_voisins_vi
 			{ // evolution d'une cellule morte
 				if ( v==3 ) set_vivante(i,j,*g);
 			}
+		}
 		}
 	}
 	return;
