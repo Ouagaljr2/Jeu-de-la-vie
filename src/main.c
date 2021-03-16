@@ -3,7 +3,6 @@
  * \brief Le fichier main !
  * \author Mahamat Ouagal
  */
-
 #include <stdio.h>
 
 #include "grille.h"

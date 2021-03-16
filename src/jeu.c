@@ -3,6 +3,7 @@
  * \brief Tout ce qui est evolution d'une grille et nombre de voisins d'une cellule
  * \author Mahamat Ouagal
  */
+
 #include "jeu.h"
 
 int compte_voisins_vivants (int i, int j, grille g){

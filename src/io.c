@@ -3,6 +3,7 @@
  * \brief gère les affichages et la fonction qui débute le jeu
  * \author Mahamat Ouagal
  */
+
 #include "io.h"
 
 void affiche_trait (int c){
