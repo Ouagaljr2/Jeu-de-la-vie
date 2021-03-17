@@ -14,14 +14,17 @@ CPATH = src/
 
 main: $(OBJETS)
 	$(CC) $(CFLAGS) -o $@ $? $(LDFLAGS) $(CFLAGS2)
+	mkdir -p bin
 	mv -f main ./bin/
 
 $(OBJ)main.o: main.c grille.h io.h jeu.h
 	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
 	mv -f *.o ./obj/
 
 $(OBJ)%.o:%.c %.h
 	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
 	mv -f *.o ./obj
 
 clean:	
