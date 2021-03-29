@@ -1,23 +1,41 @@
-main: main.o grille.o jeu.o io.o
-	gcc -g -Wall -o main main.o grille.o jeu.o io.o -lm
+CC=gcc
+CFLAGS1 = -g -Wall
+CFLAGS2 = -Iinclude -I/usr/include/cairo
+LDFLAGS= -lcairo -lm -lX11
 
-main.o: main.c grille.h io.h jeu.h
-	gcc -g -Wall -c main.c
+vpath %.h include
+vpath %.c src
+vpath %.o obj
+vpath main bin
 
-grille.o: grille.c grille.h
-	gcc -g -Wall -c grille.c
+OBJETS = $(patsubst src/%.c, obj/%.o,$(wildcard src/*.c))
+OBJ =obj/
+CPATH = src/
 
-jeu.o:	jeu.c jeu.h grille.h
-	gcc -g -Wall -c  jeu.c
+main: $(OBJETS)
+	$(CC) $(CFLAGS1) -o $@ $? $(LDFLAGS) $(CFLAGS2)
+	mkdir -p bin
+	mv -f main ./bin/
 
-io.o:	io.h grille.h jeu.h
-	gcc -g -Wall -c io.c
+$(OBJ)main.o: main.c grille.h io.h jeu.h
+	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
+	mv -f *.o ./obj/
+
+$(OBJ)%.o:%.c %.h
+	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
+	mv -f *.o ./obj
 
 clean:	
-	rm  -f *.o main
+	rm  -fr obj/*.o obj
+	rm -fr bin/main bin
+	rm -fr doc
 
-dist:
-	tar -zcvf MahamatOuagal-GoL-v1.0.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h makefile Doxyfile
+dist: makefile src include bin obj
+	tar -cvz $^ -f MahamatOuagal-GoL-v.tar.xz
 docs:
+	mkdir -p doc
 	doxygen -g
 	doxygen Doxyfile
+	mv  html latex Doxyfile ./doc

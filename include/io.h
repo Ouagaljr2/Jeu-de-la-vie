@@ -1,8 +1,3 @@
-/** 
- * \file
- * Fonctions pour les affichages
- * \author Ouagal Mahamat
- */
 #ifndef __IO_H
 #define __IO_H
 
@@ -10,10 +5,43 @@
 #include "grille.h"
 #include "jeu.h"
 
+#define SIZEX 500
+#define SIZEY 500
+
+// taille en piexels
+cairo_surface_t *creationSurface(int x,int y);
+
+//
+void cairo_close();
+
+// nombre de colonnes,
+void affiche_trait_cairo(int c, int hauteur, float tailleDeLigne);
+
+//
+void affiche_ligne_cairo(int c,int *ligne,int vieillissement,int hauteur, float tailleLigne);
+
+//
+void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, int vieillissement);
+
+//
+void efface_grille_cairo ();
+
+//
+void debut_jeu_cairo(grille *g, grille *gc);
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------//
+
 // affichage d'un trait horizontal
 /** 
  * \fn affiche_trait(int c,);
- * \param c nommbre de colonnes d'une grille
+ * \param c nombre de colonnes d'une grille
  * \return  affiche les traiss delimitants les colonnes d'une grille
  */
 void affiche_trait (int c);

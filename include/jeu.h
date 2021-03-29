@@ -1,6 +1,7 @@
 #ifndef __JEU_H
 #define __JEU_H
 
+
 #include "grille.h"
 
 // modulo modifié pour traiter correctement les bords i=0 et j=0

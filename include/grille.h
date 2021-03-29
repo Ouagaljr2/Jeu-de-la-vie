@@ -36,11 +36,44 @@ void libere_grille (grille* g);
 void init_grille_from_file (char * filename, grille* g);
 
 // rend vivante la cellule (i,j) de la grille g
+/** 
+ * \fn set_vivante(int i, int j,grille g);
+ * \param i indice d'une ligne
+ * \param j indice d'une colonne
+ * \param g une grille 
+ * \return retourne rien mais rend vivante la cellule (i,j) de la grille g
+ */
 static inline void set_vivante(int i, int j, grille g){g.cellules[i][j] =1;}
+
 // rend morte la cellule (i,j) de la grille g
+/** 
+ * \fn set_morte(int i, int j,grille g);
+ * \param i indice d'une ligne
+ * \param j indice d'une colonne
+ * \param g une grille 
+ * \return retourne rien mais rend morte la cellule (i,j) de la grille g
+ */
 static inline void set_morte(int i, int j, grille g){g.cellules[i][j] = 0;}
+
 // teste si la cellule (i,j) de la grille g est vivante
+/** 
+ * \fn est_vivante(int i, int j,grille g);
+ * \param i indice d'une ligne
+ * \param j indice d'une colonne
+ * \param g une grille 
+ * \return 1 (true) si la cellule(i,j) est vivante  si non 0(false)
+ */
 static inline int est_vivante(int i, int j, grille g){return g.cellules[i][j] != 0;}
+
+// test si la cellule (i,j) de la grille g peut etre viable
+/** 
+ * \fn non_vivante(int i, int j,grille g);
+ * \param i indice d'une ligne
+ * \param j indice d'une colonne
+ * \param g une grille 
+ * \return 1 (true) si la cellule(i,j) est non viable si non 0(false)
+ */
+static inline int non_vivable(int i, int j, grille g){return g.cellules[i][j] = -1;}
 
 // recopie gs dans gd (sans allocation)
 /** 
