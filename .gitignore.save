@@ -1,7 +1,0 @@
-*.o
-*.txt
-main
-latex
-html
-Doxyfile
-grilles
