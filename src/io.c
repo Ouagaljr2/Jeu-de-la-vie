@@ -12,8 +12,8 @@
 
 #include "io.h"
 
-#define MARGE_GAUCHE 20
-#define MARGE_HAUT 60
+#define MARGE_GAUCHE 10
+#define MARGE_HAUT 38
 #define LARGEUR 450
 #define HAUTEUR 400
 #define EPAISSEUR 5
@@ -88,6 +88,7 @@ void affiche_ligne_cairo(int c,int *ligne,int vieillissement,int hauteur, float 
 	float tailleColonne=(float) LARGEUR/(float)c;
 	cairo_t *cr;
 	cairo_t *cellules;
+	char modeAge[10];
 	cr=cairo_create(surface);
 	cellules=cairo_create(surface);
 
@@ -121,16 +122,18 @@ void affiche_ligne_cairo(int c,int *ligne,int vieillissement,int hauteur, float 
 			cairo_fill(cellules);
 
 			if (vieillissement) {
+				sprintf(modeAge, "%d", ligne[i]);
 				cairo_move_to(cr, MARGE_GAUCHE + ((i) * tailleColonne) + tailleColonne/2 - 5,
 				MARGE_HAUT + (hauteur * tailleLigne) + (tailleLigne*2/3) - 3);
-				cairo_set_source_rgb (cr, 240.0, 30.0, 27.0);
+				cairo_set_source_rgb (cr, 1.0, 0.0, 0.0);
 				cairo_select_font_face(cr, "Arial",
 					CAIRO_FONT_SLANT_NORMAL,
 					CAIRO_FONT_WEIGHT_BOLD);
 				cairo_set_font_size(cr, 15);
+				cairo_show_text(cr, modeAge);
 				cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 			}
-
+			
 			cairo_move_to(cr, MARGE_GAUCHE + ((i+1) * tailleColonne), MARGE_HAUT + (hauteur * tailleLigne));
 		}	
 	}	
@@ -145,7 +148,12 @@ void affiche_ligne_cairo(int c,int *ligne,int vieillissement,int hauteur, float 
 
 void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, int vieillissement){
 	int l=g.nbl, c=g.nbc;
-	
+
+	char pasDeTemps[100], modeComptageCyclique[100], modeVieillissement[100];
+	sprintf(pasDeTemps, " %d Générations ", tempsEvolution);
+	sprintf(modeComptageCyclique, comptageCyclique ? " Le mode de Comptage est: Cyclique" : " Le mode de Comptage est : Non-cyclique");
+	sprintf(modeVieillissement, vieillissement ? " Le mode Vieillissement est : Active" : " Le mode Vieillissement est : Desactive");
+
 	cairo_t *cr;
 	cr = cairo_create(surface);
 
@@ -154,6 +162,15 @@ void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, i
 	cairo_select_font_face(cr, "Arial",
 		CAIRO_FONT_SLANT_NORMAL,
 		CAIRO_FONT_WEIGHT_BOLD);
+
+	cairo_set_source_rgb(cr, 00, 0.0, 0.0);
+	cairo_set_font_size(cr, 20);
+	cairo_move_to(cr, 500, 50);
+	cairo_show_text(cr, pasDeTemps);
+	cairo_move_to(cr, 500, 75);
+	cairo_show_text(cr, modeComptageCyclique);  
+	cairo_move_to(cr, 500, 100);
+	cairo_show_text(cr, modeVieillissement);  
 
 	cairo_destroy(cr);
 
@@ -164,6 +181,7 @@ void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, i
 		affiche_ligne_cairo(c, g.cellules[i], vieillissement, hauteur, tailleLigne);
 		affiche_trait_cairo(c, ++hauteur, tailleLigne);
 	}
+
 	return;
 }
 
