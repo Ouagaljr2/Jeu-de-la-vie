@@ -29,20 +29,23 @@ int main (int argc, char ** argv) {
 	}
 
 	grille g, gc;
-	//int tempsEvolutionDepart=0;
+	int tempsEvolutionDepart=0;
 	init_grille_from_file(argv[1],&g);
 	alloue_grille (g.nbl, g.nbc, &gc);
+
+
+
+#if MODETEXT
+
+	affiche_grille(g,tempsEvolutionDepart,1,0,-1);
+	debut_jeu(&g, &gc);
+
+#else
 	surface=creationSurface(SIZEX,SIZEY);
 	debut_jeu_cairo(&g,&gc);
 	cairo_close(surface);
 
-
-
-//--------------------------------------------------------------------------------//
-	//affiche_grille(g,tempsEvolutionDepart,1,0);
-	
-	//debut_jeu(&g, &gc);
-
+#endif
 	libere_grille(&g);
 	libere_grille(&gc);
 	return 0;

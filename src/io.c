@@ -12,6 +12,132 @@
 
 #include "io.h"
 
+
+#if MODETEXT
+void affiche_trait (int c){
+	int i;
+	for (i=0; i<c; ++i) printf ("|---");
+	printf("|\n");
+	return;
+}
+
+void affiche_ligne (int c, int* ligne,int modeAge){
+	if(modeAge){
+		for (int i=0; i<c; ++i) 
+		if (ligne[i] == 0 ) printf ("|   ");
+		else if(ligne[i]==-1) printf("| X ");
+		else printf ("| %d ",ligne[i]);
+	printf("|\n");
+	return;
+	}
+	int i;
+	for (i=0; i<c; ++i) 
+		if (ligne[i] == 0 ) printf ("|   ");
+		else if(ligne[i]==-1) printf("| X ");
+		else printf ("| O ");
+	printf("|\n");
+	return;
+}
+
+void affiche_grille (grille g,int tempsEvolution,int mode,int modeAge,int modeoscillation){
+	int i, l=g.nbl, c=g.nbc;
+	if(modeAge){
+		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement activé");
+		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement activé");
+	}
+	else{
+		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement desactivé");
+		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement desactivé");
+	}
+	if (modeoscillation == -1) {
+		printf("Oscillation Non testee");
+	} 
+	else if (modeoscillation == 0) {
+		printf("Grille non oscillante");
+	} 
+	else {
+		printf("%d pas de temps par oscillation", modeoscillation);
+	}
+	printf("\n");
+	affiche_trait(c);
+	for (i=0; i<l; ++i) {
+		affiche_ligne(c, g.cellules[i],modeAge);
+		affiche_trait(c);
+	}	
+	printf("\n"); 
+	return;
+}
+
+void efface_grille (grille g){
+	system("clear"); 
+}
+
+void debut_jeu(grille *g, grille *gc){
+	int tempsOscillation=-1;
+	int tempsEvolution=0;
+	int modeCompteVoisinsCycle=1; // 1 equivaut a true pour dire le comptage est cyclique
+	int (*compte_voisins_vivants_mode)(int,int ,grille)=compte_voisins_vivants;
+	int modeAge=0;// 0 Age desactivé 1 pour activé
+	char c = getchar(); 
+	while (c != 'q') // touche 'q' pour quitter
+	{ 
+		switch (c) {
+			case '\n' : 
+			{ // touche "entree" pour évoluer
+				evolue(g,gc,& tempsEvolution,compte_voisins_vivants_mode,modeAge);
+				efface_grille(*g);
+				affiche_grille(*g, tempsEvolution,modeCompteVoisinsCycle, modeAge,tempsOscillation);
+				break;
+			}
+			case 'n':
+			{	tempsEvolution=0;
+				libere_grille(g);
+				libere_grille(gc);
+				char nomDeFichier[100];
+				printf("Entrer le chemain de la grille \n");
+				scanf("%s",nomDeFichier);
+				init_grille_from_file(nomDeFichier,g);
+				alloue_grille(g->nbl,g->nbc,gc);
+				affiche_grille(*g,tempsEvolution,modeCompteVoisinsCycle,modeAge,tempsOscillation);
+				break;
+			}
+			case 'c':
+			{
+				if (modeCompteVoisinsCycle){
+					modeCompteVoisinsCycle=0;
+					compte_voisins_vivants_mode=&(compte_voisins_vivants_non_cyclique);
+				}
+				else{
+					modeCompteVoisinsCycle=1;
+					compte_voisins_vivants_mode=&(compte_voisins_vivants);
+				}
+				
+				break;
+			}
+			case 'v':
+			{
+				modeAge= (modeAge) ? 0 : 1;
+				break;
+			}
+			case 'o':
+			{
+				tempsOscillation=oscillation(g,modeAge,compte_voisins_vivants_mode);
+				break;
+			}
+			default : 
+			{ // touche non traitée
+				printf("\n\e[1A");
+				break;
+			}
+		}
+		c = getchar(); 
+	}
+	return;	
+}
+
+#else
+
+
 #define MARGE_GAUCHE 10
 #define MARGE_HAUT 38
 #define LARGEUR 450
@@ -146,14 +272,21 @@ void affiche_ligne_cairo(int c,int *ligne,int vieillissement,int hauteur, float 
 
 
 
-void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, int vieillissement){
+void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, int vieillissement,int tempsOscillation){
 	int l=g.nbl, c=g.nbc;
 
-	char pasDeTemps[100], modeComptageCyclique[100], modeVieillissement[100];
+	char pasDeTemps[100], modeComptageCyclique[100], modeVieillissement[100],Oscillation[100];
 	sprintf(pasDeTemps, " %d Générations ", tempsEvolution);
 	sprintf(modeComptageCyclique, comptageCyclique ? " Le mode de Comptage est: Cyclique" : " Le mode de Comptage est : Non-cyclique");
 	sprintf(modeVieillissement, vieillissement ? " Le mode Vieillissement est : Active" : " Le mode Vieillissement est : Desactive");
 
+	if (tempsOscillation == -1) {
+		sprintf(Oscillation, " L'Oscillation est : Non testee");
+	} else if (tempsOscillation == 0) {
+		sprintf(Oscillation, " Grille non oscillante");
+	} else {
+		sprintf(Oscillation, " L'oscillation est de : %d pas de periode", tempsOscillation);
+	}
 	cairo_t *cr;
 	cr = cairo_create(surface);
 
@@ -163,14 +296,30 @@ void affiche_grille_cairo (grille g, int tempsEvolution, int comptageCyclique, i
 		CAIRO_FONT_SLANT_NORMAL,
 		CAIRO_FONT_WEIGHT_BOLD);
 
-	cairo_set_source_rgb(cr, 00, 0.0, 0.0);
+	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 	cairo_set_font_size(cr, 20);
 	cairo_move_to(cr, 500, 50);
 	cairo_show_text(cr, pasDeTemps);
 	cairo_move_to(cr, 500, 75);
-	cairo_show_text(cr, modeComptageCyclique);  
+	cairo_show_text(cr, Oscillation); 
 	cairo_move_to(cr, 500, 100);
-	cairo_show_text(cr, modeVieillissement);  
+	cairo_show_text(cr, modeComptageCyclique);  
+	cairo_move_to(cr, 500, 125);
+	cairo_show_text(cr, modeVieillissement); 
+
+	cairo_move_to(cr, 500, 200);
+	cairo_show_text(cr, "- o : Tester si la grille est oscillante");
+	cairo_move_to(cr, 500, 225);
+	cairo_show_text(cr, "- q / clic droit : Quitter le programme");
+	cairo_move_to(cr, 500, 250);
+	cairo_show_text(cr, "- v : Activer/desactiver le vieillissement");
+	cairo_move_to(cr, 500, 275);
+	cairo_show_text(cr, "- c : Passer en mode cyclique/non-cyclique");
+	cairo_move_to(cr, 500, 300);
+	cairo_show_text(cr, "- Entrée / clic gauche pour faire évoluer la grille");
+	cairo_move_to(cr, 500, 325);
+	cairo_show_text(cr, "- n : Charger une nouvelle grille depuis le terminal");
+
 
 	cairo_destroy(cr);
 
@@ -199,6 +348,7 @@ void debut_jeu_cairo(grille *g, grille *gc) {
 	int tempsEvolution = 1;
 	int vieillissement = 0;
 	int refreshGrille = 0;
+	int tempsOscillation=-1;
 
 	int modeCompteVoisinsCycle=1; // 1 equivaut a true pour dire le comptage est cyclique
 	int (*compte_voisins_vivants_mode)(int,int ,grille)=compte_voisins_vivants;
@@ -210,24 +360,28 @@ void debut_jeu_cairo(grille *g, grille *gc) {
 		XNextEvent(cairo_xlib_surface_get_display(surface), &e);
 		
 		if (e.type==Expose && e.xexpose.count<1) {
-			affiche_grille_cairo(*g, tempsEvolution, modeCompteVoisinsCycle, vieillissement);
+			affiche_grille_cairo(*g, tempsEvolution, modeCompteVoisinsCycle, vieillissement,tempsOscillation);
 		} 
 		else if (e.type == KeyPress) { // Touche pressée
 			if (e.xkey.keycode == 36 || e.xkey.keycode == 104) { // Touche entrée (ou entrée numpad)
 				evolue(g,gc,&tempsEvolution,compte_voisins_vivants_mode,vieillissement);
 				refreshGrille = 1;
 			}
-			else if (e.xkey.keycode == 57)
+			else if (e.xkey.keycode == 57)// Touche n
 			{
+				efface_grille_cairo();
+				tempsOscillation=-1;
 				tempsEvolution=0;
 				libere_grille(g);
 				libere_grille(gc);
 				char nomDeFichier[100];
 				printf("Entrer le chemain de la grille \n");
 				scanf("%s",nomDeFichier);
+				printf("la grille a été charger sur la fenetre \n");
 				init_grille_from_file(nomDeFichier,g);
 				alloue_grille(g->nbl,g->nbc,gc);
-				affiche_grille_cairo(*g,tempsEvolution,modeCompteVoisinsCycle,vieillissement);
+				affiche_grille_cairo(*g,tempsEvolution,modeCompteVoisinsCycle,vieillissement,tempsOscillation);
+				
 			}
 			 
 			else if (e.xkey.keycode == 54) { // Touche c
@@ -248,9 +402,14 @@ void debut_jeu_cairo(grille *g, grille *gc) {
 			} 
 			
 			else if (e.xkey.keycode == 38) break;// Touche q
+
+			else if(e.xkey.keycode== 32){	// touche o
+				tempsOscillation = oscillation(g, vieillissement,compte_voisins_vivants_mode);
+				refreshGrille = 1;
+			}
 		} 
 
-		// deja ok
+		// partie des clicks
 		else if (e.type == ButtonPress) {
 			if (e.xbutton.button == 1) { // Clic gauche pour evoluer
 				evolue(g,gc,&tempsEvolution,compte_voisins_vivants,vieillissement);
@@ -263,132 +422,10 @@ void debut_jeu_cairo(grille *g, grille *gc) {
 		}
 		if (refreshGrille) {
 			efface_grille_cairo();
-			affiche_grille_cairo(*g, tempsEvolution, modeCompteVoisinsCycle, vieillissement);
+			affiche_grille_cairo(*g, tempsEvolution, modeCompteVoisinsCycle, vieillissement,tempsOscillation);
 			refreshGrille = 0;
 		}
 	}
 	return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//-------------------------------------------------------------------------------------------------//
-
-//-------------------------------------------------------------------------------------------------//
-//-------------------------------------------------------------------------------------------------//
-
-void affiche_trait (int c){
-	int i;
-	for (i=0; i<c; ++i) printf ("|---");
-	printf("|\n");
-	return;
-}
-
-void affiche_ligne (int c, int* ligne,int modeAge){
-	if(modeAge){
-		for (int i=0; i<c; ++i) 
-		if (ligne[i] == 0 ) printf ("|   ");
-		else if(ligne[i]==-1) printf("| X ");
-		else printf ("| %d ",ligne[i]);
-	printf("|\n");
-	return;
-	}
-	int i;
-	for (i=0; i<c; ++i) 
-		if (ligne[i] == 0 ) printf ("|   ");
-		else if(ligne[i]==-1) printf("| X ");
-		else printf ("| O ");
-	printf("|\n");
-	return;
-}
-
-void affiche_grille (grille g,int tempsEvolution,int mode,int modeAge){
-	int i, l=g.nbl, c=g.nbc;
-	if(modeAge){
-		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement activé");
-		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement activé");
-	}
-	else{
-		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement desactivé");
-		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement desactivé");
-	}
-	affiche_trait(c);
-	for (i=0; i<l; ++i) {
-		affiche_ligne(c, g.cellules[i],modeAge);
-		affiche_trait(c);
-	}	
-	printf("\n"); 
-	return;
-}
-
-void efface_grille (grille g){
-	system("clear"); 
-}
-
-void debut_jeu(grille *g, grille *gc){
-	int tempsEvolution=0;
-	int modeCompteVoisinsCycle=1; // 1 equivaut a true pour dire le comptage est cyclique
-	int (*compte_voisins_vivants_mode)(int,int ,grille)=compte_voisins_vivants;
-	int modeAge=0;// 0 Age desactivé 1 pour activé
-	char c = getchar(); 
-	while (c != 'q') // touche 'q' pour quitter
-	{ 
-		switch (c) {
-			case '\n' : 
-			{ // touche "entree" pour évoluer
-				evolue(g,gc,& tempsEvolution,compte_voisins_vivants_mode,modeAge);
-				efface_grille(*g);
-				affiche_grille(*g, tempsEvolution,modeCompteVoisinsCycle, modeAge);
-				break;
-			}
-			case 'n':
-			{	tempsEvolution=0;
-				libere_grille(g);
-				libere_grille(gc);
-				char nomDeFichier[100];
-				printf("Entrer le chemain de la grille \n");
-				scanf("%s",nomDeFichier);
-				init_grille_from_file(nomDeFichier,g);
-				alloue_grille(g->nbl,g->nbc,gc);
-				affiche_grille(*g,tempsEvolution,modeCompteVoisinsCycle,modeAge);
-				break;
-			}
-			case 'c':
-			{
-				if (modeCompteVoisinsCycle){
-					modeCompteVoisinsCycle=0;
-					compte_voisins_vivants_mode=&(compte_voisins_vivants_non_cyclique);
-				}
-				else{
-					modeCompteVoisinsCycle=1;
-					compte_voisins_vivants_mode=&(compte_voisins_vivants);
-				}
-				
-				break;
-			}
-			case 'v':
-			{
-				modeAge= (modeAge) ? 0 : 1;
-				break;
-			}
-			default : 
-			{ // touche non traitée
-				printf("\n\e[1A");
-				break;
-			}
-		}
-		c = getchar(); 
-	}
-	return;	
-}
+#endif

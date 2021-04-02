@@ -84,4 +84,32 @@ static inline int non_vivable(int i, int j, grille g){return g.cellules[i][j] = 
  */
 void copie_grille (grille gs, grille gd);
 
+// Egalité de deux grilles
+/** 
+ * \fn grilles_egales( grille ga, grille gb)
+;
+ * \param ga une grille
+ * \param gb une grille 
+ * \return  retourne 1 (True )si ga est egale a gb si non 0(False)
+ */
+int grilles_egales( grille ga, grille gb);
+
+// Grille vide
+/** 
+ * \fn vide( grille g)
+ * \param g une grille
+ * \return  retourne 1 (True )si g est vide si non 0(False)
+ */
+int vide(grille g);
+
+// Test Oscillation d'une grille
+/** 
+ * \fn oscillation(grille *g,int vieillissement,int (*compte_voisins_vivants_mode)(int,int, grille))
+ * \param g une grille
+ * \param veillissement  entier pour activer/desactiver le mode vieillissement
+ * \param compte_voisins_vivants_mode correspond au mode d'evolution de la grille cyclique ou non cyclique
+ * \return  retourne le pas de temps correspondant à la periode d'oscillation d'une grille 
+ */
+int oscillation(grille *g,int vieillissement,int (*compte_voisins_vivants_mode)(int,int, grille));
+
 #endif

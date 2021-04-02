@@ -1,7 +1,9 @@
 CC=gcc
 CFLAGS1 = -g -Wall
 CFLAGS2 = -Iinclude -I/usr/include/cairo
-LDFLAGS= -lcairo -lm -lX11
+LDFLAGS= -lcairo -lm -lX11 -L lib/
+
+MODE=TEXT
 
 vpath %.h include
 vpath %.c src
@@ -14,8 +16,12 @@ CPATH = src/
 
 main: $(OBJETS)
 	$(CC) $(CFLAGS1) -o $@ $? $(LDFLAGS) $(CFLAGS2)
-	mkdir -p bin
+	@mkdir -p bin
+	mkdir -p lib
 	mv -f main ./bin/
+
+	ar -crv lib/libjeu.a obj/jeu.o obj/grille.o
+	ranlib lib/libjeu.a
 
 $(OBJ)main.o: main.c grille.h io.h jeu.h
 	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
@@ -31,6 +37,7 @@ clean:
 	rm  -fr obj/*.o obj
 	rm -fr bin/main bin
 	rm -fr doc
+	rm -fr lib/*.a lib
 
 dist: makefile src include bin obj
 	tar -cvz $^ -f MahamatOuagal-GoL-v.tar.xz
