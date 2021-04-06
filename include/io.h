@@ -6,7 +6,7 @@
 #include "jeu.h"
 
 
-#if MODETEXT
+#if MODETEXTE
 // affichage d'un trait horizontal
 /** 
  * \fn affiche_trait(int c,);

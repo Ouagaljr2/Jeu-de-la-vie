@@ -13,7 +13,7 @@
 #include "io.h"
 
 
-#if MODETEXT
+#if MODETEXTE
 void affiche_trait (int c){
 	int i;
 	for (i=0; i<c; ++i) printf ("|---");
@@ -42,18 +42,18 @@ void affiche_ligne (int c, int* ligne,int modeAge){
 void affiche_grille (grille g,int tempsEvolution,int mode,int modeAge,int modeoscillation){
 	int i, l=g.nbl, c=g.nbc;
 	if(modeAge){
-		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement activé");
-		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement activé");
+		if(mode==1 )printf("|%d génération |le mode d'evolution est: %s |%s\n",tempsEvolution,"Cyclique","mode vieillissement activé");
+		else printf("|%d génération |le mode d'evolution est: %s| %s\n",tempsEvolution,"non-Cyclique","mode vieillissement activé");
 	}
 	else{
-		if(mode==1 )printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"Cyclique","mode vieillissement desactivé");
-		else printf("%d génération le mode d'evolution est: %s %s\n",tempsEvolution,"non-Cyclique","mode vieillissement desactivé");
+		if(mode==1 )printf("|%d génération |le mode d'evolution est: %s |%s\n",tempsEvolution,"Cyclique","mode vieillissement desactivé");
+		else printf("|%d génération |le mode d'evolution est: %s| %s\n",tempsEvolution,"non-Cyclique","mode vieillissement desactivé");
 	}
 	if (modeoscillation == -1) {
-		printf("Oscillation Non testee");
+		printf("|Oscillation Non testee|\n");
 	} 
 	else if (modeoscillation == 0) {
-		printf("Grille non oscillante");
+		printf("|Grille non oscillante|\n");
 	} 
 	else {
 		printf("%d pas de temps par oscillation", modeoscillation);

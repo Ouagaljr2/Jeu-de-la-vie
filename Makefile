@@ -3,7 +3,7 @@ CFLAGS1 = -g -Wall
 CFLAGS2 = -Iinclude -I/usr/include/cairo
 LDFLAGS= -lcairo -lm -lX11 -L lib/
 
-MODE=TEXT
+MODE=CAIRO
 
 vpath %.h include
 vpath %.c src
@@ -13,23 +13,25 @@ vpath main bin
 OBJETS = $(patsubst src/%.c, obj/%.o,$(wildcard src/*.c))
 OBJ =obj/
 CPATH = src/
+LIB=lib/libjeu.a
 
-main: $(OBJETS)
-	$(CC) $(CFLAGS1) -o $@ $? $(LDFLAGS) $(CFLAGS2)
+main: $(LIB)
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -o $@ $? $(LDFLAGS) $(CFLAGS2)
 	@mkdir -p bin
-	mkdir -p lib
 	mv -f main ./bin/
 
-	ar -crv lib/libjeu.a obj/jeu.o obj/grille.o
-	ranlib lib/libjeu.a
+$(LIB): $(OBJETS)
+	@mkdir -p lib
+	ar -rcs $(LIB) $(OBJETS)
+	ranlib $(LIB)
 
 $(OBJ)main.o: main.c grille.h io.h jeu.h
-	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -c $< $(CFLAGS2)
 	mkdir -p obj
 	mv -f *.o ./obj/
 
 $(OBJ)%.o:%.c %.h
-	$(CC) $(CFLAGS1) -c $< $(CFLAGS2)
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -c $< $(CFLAGS2)
 	mkdir -p obj
 	mv -f *.o ./obj
 
@@ -46,3 +48,5 @@ docs:
 	doxygen -g
 	doxygen Doxyfile
 	mv  html latex Doxyfile ./doc
+
+
