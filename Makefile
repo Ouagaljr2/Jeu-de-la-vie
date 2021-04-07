@@ -41,12 +41,11 @@ clean:
 	rm -fr doc
 	rm -fr lib/*.a lib
 
-dist: makefile src include bin obj
-	tar -cvz $^ -f MahamatOuagal-GoL-v.tar.xz
+dist: Makefile src include Doxyfile grilles
+	tar -cvz $^ -f MahamatOuagal-GoL-v5.4.tar.xz
 docs:
 	mkdir -p doc
-	doxygen -g
 	doxygen Doxyfile
-	mv  html latex Doxyfile ./doc
+	mv  html latex ./doc
 
 
