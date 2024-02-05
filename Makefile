@@ -45,7 +45,7 @@ dist: Makefile src include Doxyfile grilles
 	tar -cvz $^ -f MahamatOuagal-GoL-v5.4.tar.xz
 docs:
 	mkdir -p doc
-	doxygen Doxyfile
+	doxygen -g Doxyfile
 	mv  html latex ./doc
 
 
