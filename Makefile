@@ -1,23 +1,51 @@
-main: main.o grille.o jeu.o io.o
-	gcc -g -Wall -o main main.o grille.o jeu.o io.o -lm
+CC=gcc
+CFLAGS1 = -g -Wall
+CFLAGS2 = -Iinclude -I/usr/include/cairo
+LDFLAGS= -lcairo -lm -lX11 -L lib/
 
-main.o: main.c grille.h io.h jeu.h
-	gcc -g -Wall -c main.c
+MODE=CAIRO
 
-grille.o: grille.c grille.h
-	gcc -g -Wall -c grille.c
+vpath %.h include
+vpath %.c src
+vpath %.o obj
+vpath main bin
 
-jeu.o:	jeu.c jeu.h grille.h
-	gcc -g -Wall -c  jeu.c
+OBJETS = $(patsubst src/%.c, obj/%.o,$(wildcard src/*.c))
+OBJ =obj/
+CPATH = src/
+LIB=lib/libjeu.a
 
-io.o:	io.h grille.h jeu.h
-	gcc -g -Wall -c io.c
+main: $(LIB)
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -o $@ $? $(LDFLAGS) $(CFLAGS2)
+	@mkdir -p bin
+	mv -f main ./bin/
+
+$(LIB): $(OBJETS)
+	@mkdir -p lib
+	ar -rcs $(LIB) $(OBJETS)
+	ranlib $(LIB)
+
+$(OBJ)main.o: main.c grille.h io.h jeu.h
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
+	mv -f *.o ./obj/
+
+$(OBJ)%.o:%.c %.h
+	$(CC) -DMODE$(MODE) $(CFLAGS1) -c $< $(CFLAGS2)
+	mkdir -p obj
+	mv -f *.o ./obj
 
 clean:	
-	rm  -f *.o main
+	rm  -fr obj/*.o obj
+	rm -fr bin/main bin
+	rm -fr doc
+	rm -fr lib/*.a lib
 
-dist:
-	tar -zcvf MahamatOuagal-GoL-v1.0.tar.xz main.c grille.c grille.h jeu.c jeu.h io.c io.h makefile Doxyfile
+dist: Makefile src include Doxyfile grilles
+	tar -cvz $^ -f MahamatOuagal-GoL-v5.4.tar.xz
 docs:
-	doxygen -g
+	mkdir -p doc
 	doxygen Doxyfile
+	mv  html latex ./doc
+
+
